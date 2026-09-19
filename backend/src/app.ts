@@ -3,6 +3,8 @@ import express from "express";
 import { getCorsOrigins } from "./config/env.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
+import { cartRouter } from "./modules/cart/cart.routes.js";
+import { orderRouter } from "./modules/order/order.routes.js";
 import { productRouter } from "./modules/product/product.routes.js";
 import { shopRouter } from "./modules/shop/shop.routes.js";
 import { vendorRouter } from "./modules/vendor/vendor.routes.js";
@@ -26,6 +28,8 @@ export function createApp() {
   app.use("/api/vendor", vendorRouter);
   app.use("/api/vendor/products", productRouter);
   app.use("/api/shops", shopRouter);
+  app.use("/api/cart", cartRouter);
+  app.use("/api/orders", orderRouter);
 
   app.use(errorHandler);
 
