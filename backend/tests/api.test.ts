@@ -70,6 +70,27 @@ describe("auth", () => {
     expect(res.status).toBe(401);
   });
 
+  it("rejects tokens after tokenVersion is incremented", async () => {
+    const user = await createUser({ email: "revoke@example.com", role: Role.CUSTOMER });
+    const token = await login("revoke@example.com");
+
+    const before = await authGet(token, "/api/auth/me");
+    expect(before.status).toBe(200);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { tokenVersion: { increment: 1 } },
+    });
+
+    const after = await authGet(token, "/api/auth/me");
+    expect(after.status).toBe(401);
+
+    const freshToken = await login("revoke@example.com");
+    const me = await authGet(freshToken, "/api/auth/me");
+    expect(me.status).toBe(200);
+  });
+});
+
 describe("vendor product ownership", () => {
   it("lets a vendor manage their own products", async () => {
     const vendor = await createVendorUser({ email: "v1@example.com" });

@@ -9,12 +9,14 @@ export type AuthUser = {
   id: string;
   email: string;
   role: Role;
+  tokenVersion: number;
 };
 
 type TokenPayload = {
   sub: string;
   email: string;
   role: Role;
+  tokenVersion: number;
 };
 
 declare global {
@@ -25,12 +27,37 @@ declare global {
   }
 }
 
+/**
+ * Signs a JWT that embeds the user's current tokenVersion.
+ * When tokenVersion is incremented in the DB, previously issued tokens fail auth.
+ */
 export function signToken(user: AuthUser): string {
   const { JWT_SECRET, JWT_EXPIRES_IN } = getEnv();
-  return jwt.sign({ email: user.email, role: user.role }, JWT_SECRET, {
-    subject: user.id,
-    expiresIn: JWT_EXPIRES_IN as jwt.SignOptions["expiresIn"],
+  return jwt.sign(
+    {
+      email: user.email,
+      role: user.role,
+      tokenVersion: user.tokenVersion,
+    },
+    JWT_SECRET,
+    {
+      subject: user.id,
+      expiresIn: JWT_EXPIRES_IN as jwt.SignOptions["expiresIn"],
+    },
+  );
+}
+
+/**
+ * Increments tokenVersion so every previously issued JWT for this user is rejected.
+ * Call this from ban / password-change / logout-all flows.
+ */
+export async function revokeUserTokens(userId: string): Promise<number> {
+  const updated = await prisma.user.update({
+    where: { id: userId },
+    data: { tokenVersion: { increment: 1 } },
+    select: { tokenVersion: true },
   });
+  return updated.tokenVersion;
 }
 
 export async function authenticate(req: Request, _res: Response, next: NextFunction) {
@@ -54,10 +81,16 @@ export async function authenticate(req: Request, _res: Response, next: NextFunct
 
     const user = await prisma.user.findUnique({
       where: { id: payload.sub },
-      select: { id: true, email: true, role: true },
+      select: { id: true, email: true, role: true, tokenVersion: true },
     });
 
     if (!user) throw unauthorized("User no longer exists");
+
+    // Missing claim treated as 0 so only version bumps invalidate older tokens.
+    const tokenVersion = typeof payload.tokenVersion === "number" ? payload.tokenVersion : 0;
+    if (tokenVersion !== user.tokenVersion) {
+      throw unauthorized("Token revoked");
+    }
 
     req.user = user;
     next();

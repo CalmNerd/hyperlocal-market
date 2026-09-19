@@ -2,13 +2,27 @@ import bcrypt from "bcryptjs";
 import { Role, VendorStatus } from "@prisma/client";
 import { conflict, unauthorized } from "../../lib/errors.js";
 import { prisma } from "../../lib/prisma.js";
-import { signToken } from "../../middleware/auth.js";
+import { signToken, type AuthUser } from "../../middleware/auth.js";
 import type { LoginInput, RegisterInput } from "./auth.schemas.js";
 
 const SALT_ROUNDS = 10;
 
-function toUser(user: { id: string; email: string; role: Role }) {
+function toPublicUser(user: { id: string; email: string; role: Role }) {
   return { id: user.id, email: user.email, role: user.role };
+}
+
+function toAuthUser(user: {
+  id: string;
+  email: string;
+  role: Role;
+  tokenVersion: number;
+}): AuthUser {
+  return {
+    id: user.id,
+    email: user.email,
+    role: user.role,
+    tokenVersion: user.tokenVersion,
+  };
 }
 
 function toVendor(
@@ -59,8 +73,8 @@ export async function register(input: RegisterInput) {
     });
 
     return {
-      token: signToken(toUser(user)),
-      user: toUser(user),
+      token: signToken(toAuthUser(user)),
+      user: toPublicUser(user),
       vendor: toVendor(user.vendor),
     };
   }
@@ -70,8 +84,8 @@ export async function register(input: RegisterInput) {
   });
 
   return {
-    token: signToken(toUser(user)),
-    user: toUser(user),
+    token: signToken(toAuthUser(user)),
+    user: toPublicUser(user),
     vendor: null,
   };
 }
@@ -87,8 +101,8 @@ export async function login(input: LoginInput) {
   }
 
   return {
-    token: signToken(toUser(user)),
-    user: toUser(user),
+    token: signToken(toAuthUser(user)),
+    user: toPublicUser(user),
     vendor: toVendor(user.vendor),
   };
 }
@@ -104,7 +118,7 @@ export async function getMe(userId: string) {
   }
 
   return {
-    user: toUser(user),
+    user: toPublicUser(user),
     vendor: toVendor(user.vendor),
   };
 }
