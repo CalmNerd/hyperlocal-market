@@ -128,12 +128,10 @@ Backend is deploy-ready:
 
 ## Deployed URLs
 
-Fill these in after you host the apps:
-
-- API:
-- Customer:
-- Vendor:
-- Admin:
+- API: https://hyperlocal-market.onrender.com
+- Customer: https://customer-rho-ruddy.vercel.app/
+- Vendor: https://vendor-seven-gamma.vercel.app/
+- Admin: https://admin-silk-theta-45.vercel.app/
 
 ## Assumptions
 
