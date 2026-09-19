@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build / cache
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Logs & OS
+*.log
+.DS_Store
+npm-debug.log*
+
+# Test / coverage
+coverage/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Prisma
+backend/prisma/*.db
+backend/prisma/*.db-journal
