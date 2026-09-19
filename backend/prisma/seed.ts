@@ -17,7 +17,7 @@ async function main() {
 
   await prisma.user.create({
     data: {
-      email: "admin@marketplace.local",
+      email: "admin@example.com",
       passwordHash,
       role: Role.ADMIN,
     },
@@ -25,7 +25,7 @@ async function main() {
 
   await prisma.user.create({
     data: {
-      email: "customer@marketplace.local",
+      email: "customer@example.com",
       passwordHash,
       role: Role.CUSTOMER,
     },
@@ -33,7 +33,7 @@ async function main() {
 
   await prisma.user.create({
     data: {
-      email: "vendor@marketplace.local",
+      email: "vendor@example.com",
       passwordHash,
       role: Role.VENDOR,
       vendor: {
@@ -71,7 +71,7 @@ async function main() {
 
   await prisma.user.create({
     data: {
-      email: "pending-vendor@marketplace.local",
+      email: "pending-vendor@example.com",
       passwordHash,
       role: Role.VENDOR,
       vendor: {
@@ -86,10 +86,10 @@ async function main() {
   });
 
   console.log("Seeded demo users (password: Password123!)");
-  console.log("  admin@marketplace.local");
-  console.log("  customer@marketplace.local");
-  console.log("  vendor@marketplace.local");
-  console.log("  pending-vendor@marketplace.local");
+  console.log("  admin@example.com");
+  console.log("  customer@example.com");
+  console.log("  vendor@example.com");
+  console.log("  pending-vendor@example.com");
 }
 
 main()

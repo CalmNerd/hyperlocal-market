@@ -13,7 +13,7 @@ export function AdminLoginForm() {
   const router = useRouter();
   const setSession = useAuthStore((s) => s.setSession);
 
-  const [email, setEmail] = useState("admin@marketplace.local");
+  const [email, setEmail] = useState("admin@example.com");
   const [password, setPassword] = useState("Password123!");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);

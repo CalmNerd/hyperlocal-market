@@ -61,10 +61,10 @@ npm run dev
 
 Seed accounts (password `Password123!`):
 
-- Admin: `admin@marketplace.local`
-- Customer: `customer@marketplace.local`
-- Approved vendor: `vendor@marketplace.local`
-- Pending vendor: `pending-vendor@marketplace.local`
+- Admin: `admin@example.com`
+- Customer: `customer@example.com`
+- Approved vendor: `vendor@example.com`
+- Pending vendor: `pending-vendor@example.com`
 
 ### 3. Frontends
 

@@ -14,7 +14,7 @@ export function VendorAuthForm({ mode }: { mode: "login" | "register" }) {
   const router = useRouter();
   const setSession = useAuthStore((s) => s.setSession);
 
-  const [email, setEmail] = useState(mode === "login" ? "vendor@marketplace.local" : "");
+  const [email, setEmail] = useState(mode === "login" ? "vendor@example.com" : "");
   const [password, setPassword] = useState(mode === "login" ? "Password123!" : "");
   const [shopName, setShopName] = useState("");
   const [latitude, setLatitude] = useState("30.3165");

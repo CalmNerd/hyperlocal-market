@@ -14,9 +14,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
   const router = useRouter();
   const setSession = useAuthStore((s) => s.setSession);
 
-  const [email, setEmail] = useState(
-    mode === "login" ? "customer@marketplace.local" : "",
-  );
+  const [email, setEmail] = useState(mode === "login" ? "customer@example.com" : "");
   const [password, setPassword] = useState(mode === "login" ? "Password123!" : "");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
