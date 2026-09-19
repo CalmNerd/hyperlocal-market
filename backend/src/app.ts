@@ -2,6 +2,7 @@ import cors from "cors";
 import express from "express";
 import { getCorsOrigins } from "./config/env.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import { adminRouter } from "./modules/admin/admin.routes.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
 import { cartRouter } from "./modules/cart/cart.routes.js";
 import { orderRouter } from "./modules/order/order.routes.js";
@@ -30,6 +31,7 @@ export function createApp() {
   app.use("/api/shops", shopRouter);
   app.use("/api/cart", cartRouter);
   app.use("/api/orders", orderRouter);
+  app.use("/api/admin", adminRouter);
 
   app.use(errorHandler);
 
